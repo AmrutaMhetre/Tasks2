@@ -1,0 +1,219 @@
+//core_tags
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form with JSTL</title>
+    <style>
+        body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1000px;
+}
+
+.form-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    margin: 0;
+}
+
+.form-container h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333333;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555555;
+}
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="tel"],
+.form-container input[type="number"],
+.form-container input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-container input[type="text"]:focus,
+.form-container input[type="email"]:focus,
+.form-container input[type="tel"]:focus,
+.form-container input[type="number"]:focus {
+    border-color: #3a87ad;
+    box-shadow: 0 0 5px rgba(58, 135, 173, 0.5);
+    outline: none;
+}
+
+.form-container input[type="submit"] {
+    background-color: #3a87ad;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.form-container input[type="submit"]:hover {
+    background-color: #327c9a;
+}
+
+.form-container p {
+    font-size: 14px;
+    margin: 0;
+    padding: 5px 0;
+    text-align: center;
+}
+
+.form-container p.error {
+    color: #d9534f;
+    font-weight: bold;
+}
+
+.form-container p.success {
+    color: #5cb85c;
+    font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    .form-container {
+        width: 60%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .form-container {
+        width: 50%;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Form Submission</h1>
+        <form method="post">
+            <label for="fname">First Name:</label>
+            <input type="text" id="fname" name="fname" value="${fn:escapeXml(param.fname)}">
+
+            <label for="mname">Middle Name:</label>
+            <input type="text" id="mname" name="mname" value="${fn:escapeXml(param.mname)}">
+
+            <label for="lname">Last Name:</label>
+            <input type="text" id="lname" name="lname" value="${fn:escapeXml(param.lname)}">
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" value="${param.age}">
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="${fn:escapeXml(param.email)}">
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" value="${param.phone}">
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <c:choose>
+            <c:when test="${not empty param.fname or not empty param.email or not empty param.phone}">
+            
+                <c:if test="${not empty param.fname}">
+                    <c:set var="fnameTrimmed" value="${fn:trim(param.fname)}" />
+                    <c:set var="fnameLength" value="${fn:length(fnameTrimmed)}" />
+                    <c:choose>
+                        <c:when test="${fnameLength > 3 and fn:toUpperCase(fn:substring(fnameTrimmed, 0, 1)) == fn:substring(fnameTrimmed, 0, 1)}">
+                            <p class="success">First Name submitted: ${fn:toUpperCase(fn:substring(fnameTrimmed, 0, 1))}${fn:substring(fnameTrimmed, 1, fnameLength)}</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="error">Error: The first name must be longer than 3 characters and start with a capital letter.</p>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+
+                <c:if test="${not empty param.mname}">
+                    <c:set var="mnameTrimmed" value="${fn:trim(param.mname)}" />
+                    <c:set var="mnameLength" value="${fn:length(mnameTrimmed)}" />
+                    <c:choose>
+                        <c:when test="${mnameLength > 3 and fn:toUpperCase(fn:substring(mnameTrimmed, 0, 1)) == fn:substring(mnameTrimmed, 0, 1)}">
+                            <p class="success">Middle Name submitted: ${fn:toUpperCase(fn:substring(mnameTrimmed, 0, 1))}${fn:substring(mnameTrimmed, 1, mnameLength)}</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="error">Error: The middle name must be longer than 3 characters and start with a capital letter.</p>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+
+                <c:if test="${not empty param.lname}">
+                    <c:set var="lnameTrimmed" value="${fn:trim(param.lname)}" />
+                    <c:set var="lnameLength" value="${fn:length(lnameTrimmed)}" />
+                    <c:choose>
+                        <c:when test="${lnameLength > 3 and fn:toUpperCase(fn:substring(lnameTrimmed, 0, 1)) == fn:substring(lnameTrimmed, 0, 1)}">
+                            <p class="success">Last Name submitted: ${fn:toUpperCase(fn:substring(lnameTrimmed, 0, 1))}${fn:substring(lnameTrimmed, 1, lnameLength)}</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="error">Error: The last name must be longer than 3 characters and start with a capital letter.</p>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+
+                <c:if test="${not empty param.age}">
+                    <c:choose>
+                        <c:when test="${param.age > 18}">
+                            <p class="success">Age submitted: ${param.age}</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="error">Error: Age must be greater than 18.</p>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+
+                <c:if test="${not empty param.email}">
+                    <c:choose>
+                        <c:when test="${param.email != null && param.email.indexOf('@') > 0 && param.email.indexOf('.') > param.email.indexOf('@') + 1}">
+                            <p class="success">Email submitted: ${param.email}</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="error">Error: Please enter a valid email address.</p>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+
+                <c:if test="${not empty param.phone}">
+                    <c:choose>
+                        <c:when test="${fn:length(param.phone) == 10 and param.phone.matches('[0-9]+')}">
+                            <p class="success">Phone number submitted: ${param.phone}</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="error">Error: Please enter a valid 10-digit phone number.</p>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+            </c:when>
+            <c:otherwise>
+                <p>Please fill out the form and submit it.</p>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</body>
+</html>

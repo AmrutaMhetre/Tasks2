@@ -1,0 +1,189 @@
+//Voter info exp3 sql
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voter Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="date"] {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: #337ab7;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Voter Information Form</h2>
+        <form action="index.jsp" method="post">
+            <input type="hidden" name="action" value="insert">
+            <input type="hidden" name="id" value="${param.id}">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" value="${param.first_name}" required>
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value="${param.last_name}" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="${param.email}" required>
+            <label for="date_of_birth">Date of Birth:</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" value="${param.date_of_birth}" required>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" value="${param.address}" required>
+            <button type="submit">Submit</button>
+        </form>
+
+        <sql:setDataSource var="ds" driver="com.mysql.jdbc.Driver"
+                           url="jdbc:mysql://localhost:3306/voter_db"
+                           user="root" password="Amruta@123"/>
+
+        <!-- Handle Insert -->
+        <c:if test="${param.action == 'insert'}">
+            <sql:update dataSource="${ds}">
+                INSERT INTO voters (first_name, last_name, email, date_of_birth, address)
+                VALUES (?, ?, ?, ?, ?)
+                <sql:param value="${param.first_name}" />
+                <sql:param value="${param.last_name}" />
+                <sql:param value="${param.email}" />
+                <sql:param value="${param.date_of_birth}" />
+                <sql:param value="${param.address}" />
+            </sql:update>
+        </c:if>
+
+        <!-- Handle Update -->
+        <c:if test="${param.action == 'update'}">
+            <sql:update dataSource="${ds}">
+                UPDATE voters SET first_name = ?, last_name = ?, email = ?, date_of_birth = ?, address = ?
+                WHERE id = ?
+                <sql:param value="${param.first_name}" />
+                <sql:param value="${param.last_name}" />
+                <sql:param value="${param.email}" />
+                <sql:param value="${param.date_of_birth}" />
+                <sql:param value="${param.address}" />
+                <sql:param value="${param.id}" />
+            </sql:update>
+        </c:if>
+
+        <!-- Handle Delete -->
+        <c:if test="${param.action == 'delete'}">
+            <sql:update dataSource="${ds}">
+                DELETE FROM voters WHERE id = ?
+                <sql:param value="${param.id}" />
+            </sql:update>
+        </c:if>
+
+        <!-- Fetch Data -->
+        <sql:query var="result" dataSource="${ds}">
+            SELECT * FROM voters;
+        </sql:query>
+
+        <h2>Voter List</h2>
+        <table>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+            <c:forEach var="row" items="${result.rows}">
+                <tr>
+                    <td>${row.first_name}</td>
+                    <td>${row.last_name}</td>
+                    <td>${row.email}</td>
+                    <td>${row.date_of_birth}</td>
+                    <td>${row.address}</td>
+                    <td>
+                        <a href="index.jsp?action=edit&id=${row.id}&first_name=${row.first_name}&last_name=${row.last_name}&email=${row.email}&date_of_birth=${row.date_of_birth}&address=${row.address}">Edit</a>
+                        <a href="index.jsp?action=delete&id=${row.id}">Delete</a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+
+        <!-- Edit Form -->
+        <c:if test="${param.action == 'edit'}">
+            <h2>Edit Voter Information</h2>
+            <form action="index.jsp" method="post">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" value="${param.id}">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" value="${param.first_name}" required>
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" value="${param.last_name}" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="${param.email}" required>
+                <label for="date_of_birth">Date of Birth:</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" value="${param.date_of_birth}" required>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" value="${param.address}" required>
+                <button type="submit">Update</button>
+            </form>
+        </c:if>
+    </div>
+</body>
+</html>

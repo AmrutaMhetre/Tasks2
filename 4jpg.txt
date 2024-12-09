@@ -1,0 +1,403 @@
+//page1.jsp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 sign-in">
+                <button class="btn sign-in-btn">SIGN IN</button>
+            </div>
+            <div class="col-lg-6 sign-up">
+                <h1 class="sign-up-heading">Sign Up</h1>
+                <form action="page1.jsp" method="POST" class="sign-up-data">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn sign-up-btn">SIGN UP</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<%
+    // JSP code to handle form submission and redirect
+    String username = request.getParameter("username");
+    String email = request.getParameter("email");
+    String password = request.getParameter("password");
+
+    if (username != null && email != null && password != null) {
+        // Store data in session
+        session.setAttribute("username", username);
+        session.setAttribute("email", email);
+        session.setAttribute("password", password);
+
+        // Redirect to second page
+        response.sendRedirect("page2.jsp");
+    }
+%>
+
+
+
+
+//page2.jsp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <div class="container">
+        <div class="heading">
+            <h1>Welcome, <%= session.getAttribute("username") %></h1>
+        </div>
+        <div class="fill-info">
+            <form action="page3.jsp" method="POST">
+                <div class="mb-3">
+                    <input type="email" class="form-control" name="email" placeholder="Email Address" value="<%= session.getAttribute("email") %>" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" name="password" placeholder="Password" required>
+                </div>
+                <div class="form-check checkbox">
+                    <input type="checkbox" class="form-check-input" name="remember">
+                    <label class="form-check-label">Remember me</label>
+                </div>
+                <button type="submit" class="btn login-btn">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+//page3.jsp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page 3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <div class="container page3">
+        <div class="all-inputs">
+            <form action="page4.jsp" method="POST">
+                <div class="content">
+                    <div class="mb-3">
+                        Username: <input type="text" class="form-control" name="username" value="<%= session.getAttribute("username") %>" required>
+                    </div>
+                    <div class="mb-3">
+                        Password: <input type="password" class="form-control" name="password" value="<%= session.getAttribute("password") %>" required>
+                    </div>
+                    <div class="mb-3">
+                        City of Employment: <input type="text" class="form-control" name="city" required>
+                    </div>
+                    <div class="mb-3">
+                        Web Server:
+                        <select name="server" class="form-select">
+                            <option value="Server1">Server1</option>
+                            <option value="Server2">Server2</option>
+                            <option value="Server3">Server3</option>
+                            <option value="Server4">Server4</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        Please specify your role:
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="role" value="Admin"> Admin
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="role" value="Engineer"> Engineer
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="role" value="Manager"> Manager
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="role" value="Guest"> Guest
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        Single sign-on to the following:
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="services" value="Mail"> Mail
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="services" value="Payroll"> Payroll
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="services" value="Self-service"> Self-service
+                        </div>
+                    </div>
+                    <button type="submit" class="btn page-3-btn btn-green">Submit</button>
+                    <button type="reset" class="btn page-3-btn btn-red">Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+//page4.jsp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submitted Information</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <div class="container">
+        <h1>Submitted Information</h1>
+        <div class="submit-info">
+            <p><strong>Username:</strong> <%= request.getParameter("username") %></p>
+            <p><strong>Password:</strong> <%= request.getParameter("password") %></p>
+            <p><strong>City of Employment:</strong> <%= request.getParameter("city") %></p>
+            <p><strong>Web Server:</strong> <%= request.getParameter("server") %></p>
+            <p><strong>Role:</strong> <%= request.getParameter("role") %></p>
+            <p><strong>Services:</strong> <%= request.getParameterValues("services") != null ? String.join(", ", request.getParameterValues("services")) : "None" %></p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+//style.css
+body{
+    font-family: "Wittgenstein", serif;
+}
+/* Page1 */
+.sign-in{
+    background: url("./images/1.jpg")center no-repeat;
+    background-size: cover;
+}
+.sign-in button{
+    color: white;
+}
+.sign-in-btn{
+    margin: 20rem 15rem;
+    font-size: 1.5rem;
+    background-color: rgb(48, 99, 103);
+    border-radius: 22px;
+    border: 3px solid transparent;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.5s ease-in-out;
+}
+.sign-in-btn:hover{
+    color: rgb(48, 99, 103);
+    background-color: white;
+    border: 3px solid rgb(48,99,103);
+    transition: 0.5s ease-in-out;
+}
+
+.sign-up{
+    background-color: rgb(199, 198, 198);
+}
+.sign-up-heading{
+    margin-top: 7rem;
+    padding: 1rem;
+    text-align: center;
+    color: rgb(48, 99, 103);
+    font-size: 3rem;
+    font-weight: 600;
+}
+.sign-up-data{
+    text-align: center;
+}
+.sign-up-data input{
+    font-size: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin: 1rem;
+    text-align: left;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    font-weight: 600;
+}
+.sign-up-btn{
+    font-size: 1.5rem;
+    background-color: rgb(48, 99, 103);
+    color: white;
+    border-radius: 22px;
+    border: 3px solid transparent;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-top: 40px;
+    font-weight: 600;
+    transition: 0.5s ease-in-out;
+}
+.sign-up-btn:hover{
+    background-color: white;
+    transition: 0.5s ease-in-out;
+    color: rgb(48, 99, 103);
+    border: 3px solid rgb(48,99,103);
+}
+
+/* Page2 */
+.page2{
+    /* border: 2px solid black; */
+    /* margin: 120px 0 120px; */
+    padding: 2rem;
+    padding-left: 6rem;
+    padding-right: 6rem;
+}
+.heading h1{
+    margin: 20px;
+    text-align: center;
+    font-size: 4rem;
+    color: rgb(31, 163, 154);
+}
+/* .fill-info{
+    text-align: center;
+} */
+.fill-info input{
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin-bottom: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+/* .checkbox{
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    align-items: start;
+} */
+.checkbox label{
+    font-size: 1.5rem;
+    padding-left: 1rem;
+    margin-bottom: 20px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    align-items: start;
+}
+.checkbox input{
+    margin-left: 1.3rem;
+}
+.login-btn-div{
+    text-align: center;
+}
+.login-btn{
+    font-size: 1.5rem;
+    background-color: rgb(31, 163, 154);
+    color: white;
+    border-radius: 22px;
+    border: 3px solid transparent;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-top: 10px;
+    font-weight: 600;
+}
+.login-btn:hover{
+    background-color: white;
+    color: rgb(31, 163, 154);
+    border: 3px solid rgb(31, 163, 154);
+    transition: 0.5s ease-in-out;
+}
+.remember{
+    font-size: 1.5rem;
+    padding-left: 1rem;
+}
+
+
+/* Page3 */
+.page3 .all-inputs{
+    text-align: left;
+    /* margin: 3rem;
+    margin-top: 10px; */
+    /*padding-left: 2rem;
+    padding-right: 2rem; */
+}
+.content{
+    margin: 1rem;
+    font-size: 1.3rem;
+    padding: 1rem;
+}
+.page-3-btn{
+    font-size: 1.5rem;
+    color: white;
+    border-radius: 22px;
+    border: 3px solid transparent;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-family: "Wittgenstein", serif;
+    font-weight:600;
+}
+.btn-green{
+    background: green;
+}
+.btn-red{
+    background: red;
+}
+.page-3-btn:hover{
+    background-color: white;
+    transition: 0.3s ease-in-out;
+}
+.btn-green:hover{
+    color: green;
+    border: 3px solid green;
+}
+.btn-red:hover{
+    color: red;
+    border: 3px solid red;
+}
+.fetch{
+    margin-left: 50px;
+    font-size: 1rem;
+}
+
+
+/* Page4 */
+.submit-info{
+    padding: 1rem 1rem 1rem 0;
+    font-size: 1.5rem;
+}
+
